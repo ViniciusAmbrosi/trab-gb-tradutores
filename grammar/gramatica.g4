@@ -4,15 +4,34 @@ options {
 	language=Java;
 }
 
-@header {}
+program: statement+; //espera-se um ou mais statements
 
-@member {}
+statement: attribution SEMICOLON; //no momento somente atribuição é esperada para variables-example.cc
 
-prog:	expr EOF ;
-expr:	expr ('*'|'/') expr
-    |	expr ('+'|'-') expr
-    |	INT
-    |	'(' expr ')'
+attribution: ID ASSIGN expression; // a :=
+
+//expression: term ((PLUS_OPERATOR | MINUS_OPERATOR | MULT_OPERATOR | DIV_OPERATOR) term)*;
+//expression:
+  //  expression ((PLUS_OPERATOR | MINUS_OPERATOR | PLUS_OPERATOR | MINUS_OPERATOR) expression)* |
+    //term
+
+expression:
+    expression ('*'|'/') expression |
+    expression ('+'|'-') expression |
+    term
     ;
-NEWLINE : [\r\n]+ -> skip;
-INT     : [0-9]+ ;
+
+term: INT | ID | '(' expression ')';
+
+PLUS_OPERATOR: '+';
+MINUS_OPERATOR: '-';
+MULT_OPERATOR: '*';
+DIV_OPERATOR: '/';
+
+ASSIGN: ':=';
+SEMICOLON: ';';
+
+ID: [a-zA-Z]+;
+INT: [0-9]+;
+
+WS: [ \t\r\n]+ -> skip;
