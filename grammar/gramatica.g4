@@ -9,7 +9,7 @@ options {
 }
 
 @members {
-    HashMap attributes = new HashMap();
+    HashMap<String, Double> attributes = new HashMap<String, Double>();
 }
 
 program: statement+; //espera-se um ou mais statements
@@ -27,16 +27,18 @@ ifFlow: IF relationalExpression THEN program elseFlow?;
 elseFlow: ELSE program;
 
 expression returns [ double exprValue ]:
-    expression ('*'|'/') expression |
-    expression ('+'|'-') expression |
-    term
+    expression MULT_OPERATOR expression  { $exprValue *= $expression.exprValue; System.out.println("Resultado Multi:" + $exprValue); }  |
+    expression DIV_OPERATOR expression   { $exprValue /= $expression.exprValue; System.out.println("Resultado Div:" + $exprValue);   }  |
+    expression PLUS_OPERATOR expression  { $exprValue += $expression.exprValue; System.out.println("Resultado Plus:" + $exprValue);  }  |
+    expression MINUS_OPERATOR expression { $exprValue -= $expression.exprValue; System.out.println("Resultado Minus:" + $exprValue); }  |
+    term {$exprValue = $term.value;}
     ;
 
 relationalExpression: term comparisonTerm term;
 
 term returns [double value]:
-    INT { $value = Double.parseDouble($INT.text); System.out.println("Retornando valor constante: " + $value)} |
-    ID  { $value = attributes.getOrDefault($ID.text, 0.0); System.out.println("Retornando valor de variavel {"+$ID.text+"}: " + $value)} |
+    INT { $value = Double.parseDouble($INT.text);  System.out.println("Retornando valor constante: " + $value); } |
+    ID  { $value = attributes.getOrDefault($ID.text, 0.0);  System.out.println("Retornando valor de variavel {" + $ID.text + "}: " + $value); } |
     '(' expression ')'
     ;
 
