@@ -6,10 +6,12 @@ options {
 
 program: statement+; //espera-se um ou mais statements
 
-statement: flow | attribution SEMICOLON; //no momento somente atribuição é esperada para variables-example.cc
+statement: ifFlow | whileFlow | attribution SEMICOLON; //no momento somente atribuição é esperada para variables-example.cc
 
 attribution: ID ASSIGN expression; // a :=
-flow: flowTerm term comparisonTerm term THEN program (END | elseFlow);
+
+whileFlow: WHILE term comparisonTerm term DO program;
+ifFlow: IF term comparisonTerm term THEN program (END | elseFlow);
 elseFlow: ELSE program END;
 
 //expression: term ((PLUS_OPERATOR | MINUS_OPERATOR | MULT_OPERATOR | DIV_OPERATOR) term)*;
@@ -24,7 +26,6 @@ expression:
     ;
 
 term: INT | ID | '(' expression ')';
-flowTerm: IF | ELSE | WHILE;
 comparisonTerm: EQUAL | DIFFERENT | SMALLER | BIGGER | SMALLER_EQUAL | BIGGER_EQUAL;
 
 
