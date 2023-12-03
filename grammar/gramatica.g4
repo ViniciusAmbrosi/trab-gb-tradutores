@@ -14,7 +14,7 @@ options {
 
 program: statement+; //espera-se um ou mais statements
 
-statement: ifFlow | whileFlow | attribution SEMICOLON; //no momento somente atribuição é esperada para variables-example.cc
+statement: ifFlow | whileFlow | attribution SEMICOLON;
 
 attribution:
     ID ASSIGN expression
@@ -27,10 +27,10 @@ ifFlow: IF relationalExpression THEN program elseFlow?;
 elseFlow: ELSE program;
 
 expression returns [ double exprValue ]:
-    expression MULT_OPERATOR expression  { $exprValue *= $expression.exprValue; System.out.println("Resultado Multi:" + $exprValue); }  |
-    expression DIV_OPERATOR expression   { $exprValue /= $expression.exprValue; System.out.println("Resultado Div:" + $exprValue);   }  |
-    expression PLUS_OPERATOR expression  { $exprValue += $expression.exprValue; System.out.println("Resultado Plus:" + $exprValue);  }  |
-    expression MINUS_OPERATOR expression { $exprValue -= $expression.exprValue; System.out.println("Resultado Minus:" + $exprValue); }  |
+    term MULT_OPERATOR expression  { $exprValue *= $expression.exprValue; System.out.println("Resultado Multi:" + $exprValue); }  |
+    term DIV_OPERATOR expression   { $exprValue /= $expression.exprValue; System.out.println("Resultado Div:" + $exprValue);   }  |
+    term PLUS_OPERATOR expression  { $exprValue += $expression.exprValue; System.out.println("Resultado Plus:" + $exprValue);  }  |
+    term MINUS_OPERATOR expression { $exprValue -= $expression.exprValue; System.out.println("Resultado Minus:" + $exprValue); }  |
     term {$exprValue = $term.value;}
     ;
 

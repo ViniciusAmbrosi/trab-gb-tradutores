@@ -1,33 +1,23 @@
-# trab-gb-tradutores
-trab-gb-tradutores
+# GCL com ANTLR
 
-Evidências
+Sumário:
+* Utilizado ANTLR 4
+* Build: mvn generate-sources install
+* Execute: utilizar preview do ANTLR v4 do inteliJK 
 
-Avaliação de variáveis e constantes é inerente dos testes executados a baixo.
+Árvores do Lexer/Parser (preview no inteliJ não apresenta saídas, mas foram implementadas):
 
-**Avaliação de Comando de atribuição & Expressão aritmética**
-
+**Identificar atribuição de variáveis para valores constantes e/ou expressões.**
 ![img.png](img.png)
 
-**Avaliação de Comandos de teste & Expressão relacional**
-
-Considerando (nested ou não): IF THEN END, IF THEN ELSE END
-
-![img_2.png](img_2.png)
-
-Considerando: WHILE DO
-
-
-
-**Avaliação de erros**
-
-if/else faltando end
+**Identificar comandos de teste & expressões relacionais**
 ![img_1.png](img_1.png)
 
-Atribuição faltando ';', ids, valores, ':=', utilizando '='
+**Identificar comandos de iteração**
+![img_2.png](img_2.png)
 
+**Considerando todos juntos** 
 ![img_3.png](img_3.png)
+
+**Para outro exemplo fornecido**
 ![img_4.png](img_4.png)
-![img_5.png](img_5.png)
-![img_6.png](img_6.png)
-![img_7.png](img_7.png)
