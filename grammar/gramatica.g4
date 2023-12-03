@@ -4,30 +4,43 @@ options {
 	language=Java;
 }
 
+@header {
+    import java.util.HashMap;
+}
+
+@members {
+    HashMap attributes = new HashMap();
+}
+
 program: statement+; //espera-se um ou mais statements
 
 statement: ifFlow | whileFlow | attribution SEMICOLON; //no momento somente atribuição é esperada para variables-example.cc
 
-attribution: ID ASSIGN expression; // a :=
+attribution:
+    ID ASSIGN expression
+    { attributes.put($ID.text, new Double($expression.exprValue)); }
+    { System.out.println("Processando e salvando variável {" + $ID.text + "} com valor {" + $expression.exprValue + "}"); }
+    ;
 
-whileFlow: WHILE term comparisonTerm term DO program;
-ifFlow: IF term comparisonTerm term THEN program (END | elseFlow);
-elseFlow: ELSE program END;
+whileFlow: WHILE relationalExpression DO program;
+ifFlow: IF relationalExpression THEN program elseFlow?;
+elseFlow: ELSE program;
 
-//expression: term ((PLUS_OPERATOR | MINUS_OPERATOR | MULT_OPERATOR | DIV_OPERATOR) term)*;
-//expression:
-  //  expression ((PLUS_OPERATOR | MINUS_OPERATOR | PLUS_OPERATOR | MINUS_OPERATOR) expression)* |
-    //term
-
-expression:
+expression returns [ double exprValue ]:
     expression ('*'|'/') expression |
     expression ('+'|'-') expression |
     term
     ;
 
-term: INT | ID | '(' expression ')';
-comparisonTerm: EQUAL | DIFFERENT | SMALLER | BIGGER | SMALLER_EQUAL | BIGGER_EQUAL;
+relationalExpression: term comparisonTerm term;
 
+term returns [double value]:
+    INT { $value = Double.parseDouble($INT.text); System.out.println("Retornando valor constante: " + $value)} |
+    ID  { $value = attributes.getOrDefault($ID.text, 0.0); System.out.println("Retornando valor de variavel {"+$ID.text+"}: " + $value)} |
+    '(' expression ')'
+    ;
+
+comparisonTerm: EQUAL | DIFFERENT | SMALLER | BIGGER | SMALLER_EQUAL | BIGGER_EQUAL;
 
 PLUS_OPERATOR: '+';
 MINUS_OPERATOR: '-';
@@ -44,7 +57,6 @@ WHILE: 'while';
 
 THEN: 'then'; //sucede if, else
 DO: 'do'; // sucede while
-END: 'end'; //termina if, else
 
 ID: [a-zA-Z]+;
 INT: [0-9]+;
